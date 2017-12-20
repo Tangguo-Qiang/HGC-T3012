@@ -279,6 +279,8 @@ static void RTC_SetFlag(byte reg)
 //void RTC_CheckAndConfig(RTC_TimeTypeDef *tm)
 void RTC_CheckAndConfig(void)
 {
+	uint wait=0;
+	
    	  /*在启动时检查备份寄存器BKP_DR1，如果内容不是0xA5A5,
 	  则需重新配置时间并询问用户调整时间*/
 	if (BKP_ReadBackupRegister(BKP_DR1) != 0xA5A5)
@@ -311,13 +313,36 @@ void RTC_CheckAndConfig(void)
 //		printf("\r\n No need to configure RTC....");
 //		
 		/*等待寄存器同步*/
-		RTC_WaitForSynchro();
+//		RTC_WaitForSynchro();
+		wait = 72000000;
+		/* Clear RSF flag */
+		RTC->CRL &= (uint16_t)~RTC_FLAG_RSF;
+		/* Loop until RSF flag is set */
+		while (((RTC->CRL & RTC_FLAG_RSF) == (uint16_t)RESET)&&(--wait))
+		{
+		}
 		
-		/*允许RTC秒中断*/
-		RTC_ITConfig(RTC_IT_SEC, ENABLE);
+
+		if(wait)
+		{
+			/*允许RTC秒中断*/
+			RTC_ITConfig(RTC_IT_SEC, ENABLE);
+			
+			/*等待上次RTC寄存器写操作完成*/
+			RTC_WaitForLastTask();
+		}
+		else
+		{
+	    /* RTC Configuration */
+	    RTC_Configuration();
 		
-		/*等待上次RTC寄存器写操作完成*/
-		RTC_WaitForLastTask();
+		/* Adjust time by users typed on the hyperterminal */
+//	    Time_Adjust(tm);
+	    Time_Adjust();
+			
+      BKP_WriteBackupRegister(BKP_DR1, 0xA5A5);
+		}
+		
 	}
 	
 		

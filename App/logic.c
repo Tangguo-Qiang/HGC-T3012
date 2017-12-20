@@ -16,14 +16,13 @@
 #define SCREEN_WAITLIGHT_1S		120
 
 typedef struct{
-//	uint16_t   Moto1Act;
-	uint16_t		Moto1Index;
-	uint16_t  	Moto2Act;
-	uint16_t  	Moto2RpmPitch;
-	uint16_t		Moto2Index;
+	uint16_t		Moto1PwmPace;
+	uint16_t  	Moto1RpmPace;
+	uint16_t  	Moto2PwmPace;
+	uint16_t  	Moto2RpmPace;
 }SysIndex_TypeDef;
 //PWM_DUTYOCCUPY_MOTO1ACT
-SysIndex_TypeDef SysIndex={0,PWM_DUTYOCCUPY_MOTO2_RATE10TO08,0,0};
+SysIndex_TypeDef SysIndex={PWM_DUTYOCCUPY_OUT_MOTO1STEP,RPM_MOTO1_OUT_STEP,0,0};
 uint16_t MotoPFStopPwm = PWM_DUTYOCCUPY_MOTO2STOP;
 
 byte SeqOperDelay= 0; 
@@ -39,25 +38,25 @@ void SetVentiMoto2Act(void)
 	switch(App.Data.SysCtrlPara.VentilateRate )
 	{
 		case RATE10TO06:
-			SysIndex.Moto2Act = PWM_DUTYOCCUPY_MOTO2_RATE10TO06;
-			SysIndex.Moto2RpmPitch = (RPM_MOTO2_MAX06-RPM_MOTO2_MIN)/20;
+			SysIndex.Moto2PwmPace = (uint16_t)((PWM_DUTYOCCUPY_MOTO2_RATE10TO06)/AIRFLOW_TOTAL_STEPS);
+			SysIndex.Moto2RpmPace = (uint16_t)((RPM_MOTO2_MAX06-RPM_MOTO2_MIN)/AIRFLOW_TOTAL_STEPS);
 			break;
 		case RATE10TO08:
-			SysIndex.Moto2Act = PWM_DUTYOCCUPY_MOTO2_RATE10TO08;
-			SysIndex.Moto2RpmPitch = (RPM_MOTO2_MAX08-RPM_MOTO2_MIN)/20;
+			SysIndex.Moto2PwmPace = (uint16_t)((PWM_DUTYOCCUPY_MOTO2_RATE10TO08)/AIRFLOW_TOTAL_STEPS);
+			SysIndex.Moto2RpmPace = (uint16_t)((RPM_MOTO2_MAX08-RPM_MOTO2_MIN)/AIRFLOW_TOTAL_STEPS);
 			break;
 		case RATE10TO10:
-			SysIndex.Moto2Act = PWM_DUTYOCCUPY_MOTO2_RATE10TO10;
-			SysIndex.Moto2RpmPitch = (RPM_MOTO2_MAX10-RPM_MOTO2_MIN)/20;
+			SysIndex.Moto2PwmPace = (uint16_t)((PWM_DUTYOCCUPY_MOTO2_RATE10TO10)/AIRFLOW_TOTAL_STEPS);
+			SysIndex.Moto2RpmPace = (uint16_t)((RPM_MOTO2_MAX10-RPM_MOTO2_MIN)/AIRFLOW_TOTAL_STEPS);
 			break;
 		case RATE10TO12:
-			SysIndex.Moto2Act = PWM_DUTYOCCUPY_MOTO2_RATE10TO12;
-			SysIndex.Moto2RpmPitch = (RPM_MOTO2_MAX12-RPM_MOTO2_MIN)/20;
+			SysIndex.Moto2PwmPace = (uint16_t)((PWM_DUTYOCCUPY_MOTO2_RATE10TO12)/AIRFLOW_TOTAL_STEPS);
+			SysIndex.Moto2RpmPace = (uint16_t)((RPM_MOTO2_MAX12-RPM_MOTO2_MIN)/AIRFLOW_TOTAL_STEPS);
 			break;
 		default:
 			App.Data.SysCtrlPara.VentilateRate = RATE10TO08;
-			SysIndex.Moto2Act = PWM_DUTYOCCUPY_MOTO2_RATE10TO08;
-			SysIndex.Moto2RpmPitch = (RPM_MOTO2_MAX08-RPM_MOTO2_MIN)/20;
+			SysIndex.Moto2PwmPace = (uint16_t)((PWM_DUTYOCCUPY_MOTO2_RATE10TO08)/AIRFLOW_TOTAL_STEPS);
+			SysIndex.Moto2RpmPace = (uint16_t)((RPM_MOTO2_MAX08-RPM_MOTO2_MIN)/AIRFLOW_TOTAL_STEPS);
 			break;
 	}	
 }
@@ -70,17 +69,14 @@ void GetMotoXFOcupy(uint8_t airflow)
 		airflow=AIRFLOW_STEP20;
 	if(airflow )
 	{
-		App.SysCtrlStatus.XFmotoRPM= RPM_MOTO1_MIN+(RPM_MOTO1_STEP*airflow);
+		temp = (SysIndex.Moto1RpmPace*airflow);
+		temp += RPM_MOTO1_MIN;
+		App.SysCtrlStatus.XFmotoRPM= (uint16_t)temp;
 		
-		airflow *= AIRFLOWCTRL_CTRLSTEP_PERSENT;
-//		airflow += AIRFLOWCTRL_CTRLMIN_PERSENT;
 				
-		//设定moto起始比例为PWM_DUTYOCCUPY_MIN
-		temp = airflow;
-		temp *= PWM_DUTYOCCUPY_MOTO1ACT;//SysIndex.Moto1Act;
-		temp /= 100;
+		temp = SysIndex.Moto1PwmPace*airflow;
 		temp += (PWM_DUTYOCCUPY_MOTO1MIN);
-		App.SysCtrlStatus.XFmotoPWM= (uint16_t)temp;
+		App.SysCtrlStatus.XFmotoPWM= (uint16_t)temp; 
 	}
 	else
 	{
@@ -99,15 +95,15 @@ void GetMotoPFOcupy(uint8_t airflow)
 	{
 		if(airflow )
 		{
-			App.SysCtrlStatus.PFmotoRPM= RPM_MOTO2_MIN+(SysIndex.Moto2RpmPitch*airflow);
+			temp = (SysIndex.Moto2RpmPace*airflow);
+			temp += RPM_MOTO2_MIN;
+			App.SysCtrlStatus.PFmotoRPM= (uint16_t)temp;
 			
-			airflow *= AIRFLOWCTRL_CTRLSTEP_PERSENT;
-	//		airflow += AIRFLOWCTRL_CTRLMIN_PERSENT;
-			temp = airflow;
-			temp *= SysIndex.Moto2Act;
-			temp /= 100;
+					
+			temp = SysIndex.Moto2PwmPace*airflow;
 			temp += (PWM_DUTYOCCUPY_MOTO2MIN);
-			App.SysCtrlStatus.PFmotoPWM= (uint16_t)temp;
+			App.SysCtrlStatus.PFmotoPWM= (uint16_t)temp; 
+			
 		}
 		else
 		{
@@ -124,115 +120,6 @@ void GetMotoPFOcupy(uint8_t airflow)
 }
 
 #ifdef __SELF_ADJUSTMOTO
-void MotoXFJudgebyRPM(void)
-{
-	if(App.SysRunStatus.XFmotoPWM>PWM_DUTYOCCUPY_MOTO1MIN)
-	{
-		if(App.SysRunStatus.XFmotoRPM<RPM_MOTO1_BOTTOM)
-		{
-			App.SysFault.MotoXF++;
-			App.SysCtrlStatus.XFmotoPWM += 50;
-			if(App.SysCtrlStatus.XFmotoPWM >9000)
-			{
-				App.SysCtrlStatus.XFmotoPWM =9000;
-				if(App.SysFault.MotoXF>10)  //plus 10%
-				{
-					App.SysFault.FaultFlag |= XFMOTO_FAULT;
-					App.SysFault.FaultFlag &= ~FAULTICON_DISP;				
-				}	
-			}				
-		}
-		else
-		{
-			App.SysFault.MotoXF = 0;
-			App.SysFault.FaultFlag &= ~XFMOTO_FAULT;				
-			if(App.SysRunStatus.XFmotoRPM>(RPM_MOTO1_TOP))
-			{
-				SysIndex.Moto1Index++;
-				if(App.SysCtrlStatus.XFmotoPWM>50)
-					App.SysCtrlStatus.XFmotoPWM -= 20;
-			}
-			else if((SysIndex.Moto1Index)&&(App.SysRunStatus.XFmotoRPM<(RPM_MOTO1_TOP-300)))
-			{
-				SysIndex.Moto1Index--;
-				if(App.SysCtrlStatus.XFmotoPWM<9980)
-					App.SysCtrlStatus.XFmotoPWM += 20;
-			}
-		}
-	}
-}
-
-void MotoPFJudgebyRPM(void)
-{
-	if((App.SysCtrlStatus.BypassMode != BYPASS_CIRCLEIN)&&(App.SysCtrlStatus.ThermalMode != HEATMODE_ON))
-	{		
-		if(App.SysRunStatus.PFmotoPWM>PWM_DUTYOCCUPY_MOTO2MIN)
-		{
-			if(App.SysRunStatus.PFmotoRPM<RPM_MOTO2_BOTTOM)
-			{
-				App.SysFault.MotoPF++;
-				App.SysCtrlStatus.PFmotoPWM += 50;
-				if(App.SysCtrlStatus.PFmotoPWM >9000)
-				{
-					App.SysCtrlStatus.PFmotoPWM=9000;
-					if(App.SysFault.MotoPF>10)  //plus 10%
-					{
-						App.SysFault.FaultFlag |= PFMOTO_FAULT;	
-						App.SysFault.FaultFlag &= ~FAULTICON_DISP;	
-					}
-				}					
-			}
-			else
-			{
-				App.SysFault.MotoPF = 0;
-				App.SysFault.FaultFlag &= ~PFMOTO_FAULT;				
-				if(App.SysRunStatus.PFmotoRPM>(RPM_MOTO2_TOP))
-				{
-					SysIndex.Moto2Index++;
-					if(App.SysCtrlStatus.PFmotoPWM>50)
-						App.SysCtrlStatus.PFmotoPWM -= 20;;
-				}
-				else if((SysIndex.Moto2Index)&&(App.SysRunStatus.PFmotoRPM<(RPM_MOTO2_TOP-300)))
-				{				
-					SysIndex.Moto2Index--;
-					if(App.SysCtrlStatus.PFmotoPWM<9980)
-						App.SysCtrlStatus.PFmotoPWM += 20;
-				}
-			}
-		}
-	}
-	else	
-	{
-		if(MotoPFStopPwm>9000)
-		{
-			MotoPFStopPwm = 9000;
-			App.SysFault.MotoPF++;
-		}
-		else if(MotoPFStopPwm<4000)
-		{
-			MotoPFStopPwm = 4000;
-			App.SysFault.MotoPF++;
-		}
-		else
-			App.SysFault.MotoPF=0;
-		
-		if(App.SysFault.MotoPF>50)  //plus 10%
-		{
-			App.SysFault.MotoPF=50;
-			App.SysFault.FaultFlag |= PFMOTO_FAULT;	
-			App.SysFault.FaultFlag &= ~FAULTICON_DISP;	
-		}			
-//		if(App.SysRunStatus.BypassMode == BYPASS_CIRCLEIN)
-//		{
-			if(App.SysRunStatus.PFmotoRPM>(RPM_MOTO2_STOP+150))
-				MotoPFStopPwm -=20;
-			else if(App.SysRunStatus.PFmotoRPM<(RPM_MOTO2_STOP-50))
-				MotoPFStopPwm +=50;
-//		}
-		
-		App.SysCtrlStatus.PFmotoPWM=MotoPFStopPwm;
-	}
-}
 
 #endif
 
@@ -277,8 +164,7 @@ void ParseEchoData(byte data)
 					{
 						App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEOUT;
 //						PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
-					PostMessage(MessageCommTrans, COMM_CIRCLEMODE);
-					PostMessage(MessageParaUpdate, PARA_PFMOTODUTY);
+					PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					}
 //					System.Device.Timer.Start(CO2_WARNING_TIMER,TimerMessage,CO2_WARNING_MS,SwitchCircleMode);
 				}
@@ -288,8 +174,7 @@ void ParseEchoData(byte data)
 					{
 						App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEIN;
 //						PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
-					PostMessage(MessageCommTrans, COMM_CIRCLEMODE);
-					PostMessage(MessageParaUpdate, PARA_PFMOTODUTY);
+					PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					}
 				}
 				App.Menu.MainForm.RefreshFlag |= MAINFORM_CICLEMODE;
@@ -370,8 +255,6 @@ void ParseEchoData(byte data)
 						App.SysFault.FaultFlag &= ~XFMOTO_FAULT;
 				}
 			}				
-			else
-				MotoXFJudgebyRPM();
 #endif
 			break;
 		case COMM_PFMOTODUTY:
@@ -411,8 +294,6 @@ void ParseEchoData(byte data)
 
 				}
 			}	
-			else
-				MotoPFJudgebyRPM();
 #endif
 			break;
 		case COMM_POWER_SET:
@@ -676,28 +557,42 @@ void CtrlParaUpdate(ParaOperTypedef data)
 				case CIRCLEMODE_OUT:
 					App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEOUT;
 					App.SysFault.FaultFlag &= ~(DATABEYOND_FLAG);
-					GetMotoPFOcupy(App.SysCtrlStatus.AirFlowSet);
-//					PostMessage(MessageParaUpdate, PARA_PFMOTODUTY);
+				 SysIndex.Moto1PwmPace = PWM_DUTYOCCUPY_OUT_MOTO1STEP;
+				 SysIndex.Moto1RpmPace = RPM_MOTO1_OUT_STEP;
 					PostMessage(MessageCommTrans, COMM_CIRCLEMODE);
 				break;
 				case CIRCLEMODE_IN:
 					App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEIN;
 					App.SysFault.FaultFlag &= ~(DATABEYOND_FLAG);
-					GetMotoPFOcupy(App.SysCtrlStatus.AirFlowSet);
+				 SysIndex.Moto1PwmPace = PWM_DUTYOCCUPY_IN_MOTO1STEP;
+				 SysIndex.Moto1RpmPace = RPM_MOTO1_IN_STEP;
 //					PostMessage(MessageParaUpdate, PARA_PFMOTODUTY);
 					PostMessage(MessageCommTrans, COMM_CIRCLEMODE);
 				break;
 				case CIRCLEMODE_AUTO:
+					if(App.SysCtrlStatus.BypassMode == BYPASS_CIRCLEIN)
+					{
+						 SysIndex.Moto1PwmPace = PWM_DUTYOCCUPY_IN_MOTO1STEP;
+						 SysIndex.Moto1RpmPace = RPM_MOTO1_IN_STEP;
+					}
+					else
+					{
+						App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEOUT;
+					  SysIndex.Moto1PwmPace = PWM_DUTYOCCUPY_OUT_MOTO1STEP;
+					  SysIndex.Moto1RpmPace = RPM_MOTO1_OUT_STEP;
+					}
 				break;
 				default:
 					App.SysFault.FaultFlag &= ~(DATABEYOND_FLAG);
 					App.Data.SysCtrlPara.CircleModeSet =CIRCLEMODE_OUT;
 					App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEOUT;
-					GetMotoPFOcupy(App.SysCtrlStatus.AirFlowSet);
-//					PostMessage(MessageParaUpdate, PARA_PFMOTODUTY);
+				 SysIndex.Moto1PwmPace = PWM_DUTYOCCUPY_OUT_MOTO1STEP;
+				 SysIndex.Moto1RpmPace = RPM_MOTO1_OUT_STEP;
 					PostMessage(MessageCommTrans, COMM_CIRCLEMODE);
 					break;
 			}	
+			GetMotoXFOcupy(App.SysCtrlStatus.AirFlowSet);
+			GetMotoPFOcupy(App.SysCtrlStatus.AirFlowSet);
 			App.Menu.MainForm.RefreshFlag |=MAINFORM_CICLEMODE;
 			StorePost(STORE_SYSPARA);
 			break;

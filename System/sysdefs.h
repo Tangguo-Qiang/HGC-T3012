@@ -11,11 +11,8 @@
 #define __SYSDEFS_H
 
 
-//#define MAIN_VERSION  2
-//#define SUB_VERSION		06
 #define MAIN_VERSION  2
-#define SUB_VERSION		29
-//#define SUB_VERSION		20
+#define SUB_VERSION		30
 
 #define __WIFI_TEST
 #define __FAULT_DISP
@@ -45,10 +42,10 @@
 //#define HD_GJ_800C
 //#define HD_GJ_500B
 //#define HD_GJ_350A
-//#define HD_GJ_500C
+#define HD_GJ_500C
 //#define HD_GJ_500A
 //#define HD_GJ_600Z
-#define HD_GJ_360C
+//#define HD_GJ_360C
 
 
 typedef enum{
