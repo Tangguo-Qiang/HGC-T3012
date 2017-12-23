@@ -147,10 +147,10 @@
 	#define MACHINE_TYPE     								Capital_C
 	#define MACHINE_CAPACITY     							HG_500
 	#define BYPASS_ANGLE												150
-	#define AIRFLOW_TOTAL_STEPS									(20)
-	
 	#define DISP_AIRFLOW_MIN								100
 	#define DISP_AIRFLOW_VARY								400
+	#define AIRFLOW_TOTAL_STEPS									(20)
+	
 	#define PWM_DUTYOCCUPY_MOTO1MAX											10000  //100%
 	#define PWM_DUTYOCCUPY_OUT_MOTO1ACT											(1500)    //100-70
 	#define PWM_DUTYOCCUPY_IN_MOTO1ACT											(1120)    //100-70
@@ -300,27 +300,31 @@
 	#define DISP_AIRFLOW_VARY								300
 	
 /* for new 49moto*/	
-	#define PWM_DUTYOCCUPY_MOTO1ACT											2200    //100-70
-	#define PWM_DUTYOCCUPY_MOTO1MIN											7200    //70%
-	
-	#define PWM_DUTYOCCUPY_MOTO2MIN											7200    //70%
-	#define PWM_DUTYOCCUPY_MOTO2STOP										7000    //70%
-	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO06							 900  //87-80
-	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO08							1100  //90.25-80
-	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO10							1300  //93.5-80
-	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO12							1500  //96.75-80
-
-//	#define PWM_DUTYOCCUPY_MOTO1ACT											2000    //100-70
-//	#define PWM_DUTYOCCUPY_MOTO1MIN											8000    //70%
+//	#define PWM_DUTYOCCUPY_MOTO1ACT											2200    //100-70
+//	#define PWM_DUTYOCCUPY_MOTO1MIN											7200    //70%
 //	
-//	#define PWM_DUTYOCCUPY_MOTO2MIN											8000    //70%
-//	#define PWM_DUTYOCCUPY_MOTO2STOP										7800    //70%
-//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO06							 700  //87-80
-//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO08							950  //90.25-80
-//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO10							1150  //93.5-80
-//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO12							1350  //96.75-80
-//	#define RPM_MOTO1_TOP							(uint16_t)1385		//1500
-//	#define RPM_MOTO2_TOP							(uint16_t)1100		//1350
+//	#define PWM_DUTYOCCUPY_MOTO2MIN											7200    //70%
+//	#define PWM_DUTYOCCUPY_MOTO2STOP										7000    //70%
+//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO06							 900  //87-80
+//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO08							1100  //90.25-80
+//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO10							1300  //93.5-80
+//	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO12							1500  //96.75-80
+
+	#define AIRFLOW_TOTAL_STEPS									(20)
+	
+	#define PWM_DUTYOCCUPY_MOTO1MAX											10000  //100%
+	#define PWM_DUTYOCCUPY_OUT_MOTO1ACT											(2000)    //100-70
+	#define PWM_DUTYOCCUPY_IN_MOTO1ACT											(1500)    //100-70
+	#define PWM_DUTYOCCUPY_MOTO1MIN											8000    //70%
+	#define PWM_DUTYOCCUPY_OUT_MOTO1STEP											(PWM_DUTYOCCUPY_OUT_MOTO1ACT/AIRFLOW_TOTAL_STEPS)    //100-70
+	#define PWM_DUTYOCCUPY_IN_MOTO1STEP											(PWM_DUTYOCCUPY_IN_MOTO1ACT/AIRFLOW_TOTAL_STEPS)    //100-70
+
+	#define PWM_DUTYOCCUPY_MOTO2MIN											8000    //70%
+	#define PWM_DUTYOCCUPY_MOTO2STOP										7800    //70%
+	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO06							 700  //87-80
+	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO08							950  //90.25-80
+	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO10							1150  //93.5-80
+	#define PWM_DUTYOCCUPY_MOTO2_RATE10TO12							1350  //96.75-80
 
 #ifdef __RPMCTRL_OFF
 	
@@ -341,11 +345,14 @@
 	
 	
 #else
+	#define RPM_MOTO1_OUT_MAX							(uint16_t)1420		//1130
+	#define RPM_MOTO1_IN_MAX							(uint16_t)950		//1130
+	#define RPM_MOTO1_MIN									(uint16_t)500
+	#define RPM_MOTO1_OUT_ACT							(RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)
+	#define RPM_MOTO1_IN_ACT							(RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)
+	#define RPM_MOTO1_OUT_STEP						(uint16_t)((RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
+	#define RPM_MOTO1_IN_STEP						(uint16_t)((RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 
-	#define RPM_MOTO1_MAX							(uint16_t)1420		//1500
-	#define RPM_MOTO1_MIN							(uint16_t)500
-	#define RPM_MOTO1_ACT							(RPM_MOTO1_MAX-RPM_MOTO1_MIN)
-	#define RPM_MOTO1_STEP						(uint16_t)((RPM_MOTO1_MAX-RPM_MOTO1_MIN)/20)
 	
 	#define RPM_MOTO2_MAX12							(uint16_t)1050		//1350
 	#define RPM_MOTO2_MAX10							(uint16_t)950		//1350
@@ -354,7 +361,7 @@
 	#define RPM_MOTO2_MIN							(uint16_t)400
 	#define RPM_MOTO2_STOP							(uint16_t)350
 	
-	#define RPM_MOTO1_TOP							(uint16_t)(RPM_MOTO1_MAX+50)
+	#define RPM_MOTO1_TOP							(uint16_t)(RPM_MOTO1_OUT_MAX+50)
 	#define RPM_MOTO2_TOP							(uint16_t)(RPM_MOTO2_MAX12+50)
 	#define RPM_MOTO1_BOTTOM							(uint16_t)(RPM_MOTO1_MIN-50)
 	#define RPM_MOTO2_BOTTOM							(uint16_t)(RPM_MOTO2_STOP-50)   //FOR V2.20   & 150-200 for V2.18-19

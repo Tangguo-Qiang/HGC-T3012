@@ -22,9 +22,9 @@
 //#define __LANGJIE_CTRL
 //#define __MAILINSEN_CTRL
 
-#define __ONLINE_DEBUG
+//#define __ONLINE_DEBUG
 //#define __RPMCTRL_OFF
-#define __DEBUG
+//#define __DEBUG
 
 #ifdef __ONLINE_DEBUG
   #define __DEBUG
@@ -34,7 +34,7 @@
 //#define HD_GJ_350B
 //#define HD_GJ_250A
 //#define HD_GJ_250B
-//#define HD_GJ_350C
+#define HD_GJ_350C
 //#define HD_GJ_250C
 //#define HD_GJ_250T
 //#define HD_GJ_150C
@@ -42,7 +42,7 @@
 //#define HD_GJ_800C
 //#define HD_GJ_500B
 //#define HD_GJ_350A
-#define HD_GJ_500C
+//#define HD_GJ_500C
 //#define HD_GJ_500A
 //#define HD_GJ_600Z
 //#define HD_GJ_360C
