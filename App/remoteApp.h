@@ -57,7 +57,7 @@ typedef enum{
 
 void AppWifiInit(void);
 void WifiRecvParse(byte type);
-void WifiUpload(void);
+//void WifiUpload(void);
 void WifiCtrlCode(byte code);
 
 #endif

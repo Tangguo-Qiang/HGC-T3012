@@ -47,30 +47,32 @@ static uint SysFaultBuffer=0;
 
 static void AppSysParaUpload(void)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
+//	byte* pdes=TxValidDataBuffer;
 	
-	*pdes++ =SysParaUpload; //4  0
-	*pdes++ =MACHINE_CAPACITY;   //5  1
+	TxValidDataBuffer[index++] =SysParaUpload; //4  0
+	TxValidDataBuffer[index++] =MACHINE_CAPACITY;   //5  1
 	if(App.Data.SysCtrlPara.Power != POWER_OFF)
-		*pdes++ = POWER_ON;   	//6  2
+		TxValidDataBuffer[index++] = POWER_ON;   	//6  2
 	else
-		*pdes++ = POWER_OFF;   	//6  2
-	*pdes++ = App.Data.SysCtrlPara.WorkMode;   //7  3
-	*pdes++ = App.Data.SysCtrlPara.MuteSet;   //8  4
-	*pdes++ = App.Data.SysCtrlPara.CircleModeSet;   //9  5
-	*pdes++ = App.Data.SysCtrlPara.ThermalModeSet;   //10  6
-	*pdes++ = App.Data.SysCtrlPara.VentilateRate;   //11  7
-	*pdes++ = App.SysCtrlStatus.AirFlowSet;   //12  8
-	*pdes++ = App.SysCtrlStatus.ChildLock;   //13  9
-	*pdes++ = App.SysCtrlStatus.BypassMode;   //14  10
-	*pdes++ = App.SysCtrlStatus.ThermalMode;   //15  11
-	*pdes++ = App.Data.SensorData.TempInside+40;   //16  12
-	*pdes++ = App.Data.SensorData.RHInside;   //17  13
-	*pdes++ = App.Data.SensorData.TempOutside+40;   //18  14
-	*pdes++ = (App.Data.SensorData.CO2Inside>>8);   //19  15
-	*pdes++ = (App.Data.SensorData.CO2Inside&0xFF);   //20  16
-	*pdes++ = App.Data.SensorData.PMInside>>8;   //21  17
-	*pdes++ = App.Data.SensorData.PMInside&0xFF;   //22  18
+		TxValidDataBuffer[index++] = POWER_OFF;   	//6  2
+	
+	TxValidDataBuffer[index++] = App.Data.SysCtrlPara.WorkMode;   //7  3
+	TxValidDataBuffer[index++] = App.Data.SysCtrlPara.MuteSet;   //8  4
+	TxValidDataBuffer[index++] = App.Data.SysCtrlPara.CircleModeSet;   //9  5
+	TxValidDataBuffer[index++] = App.Data.SysCtrlPara.ThermalModeSet;   //10  6
+	TxValidDataBuffer[index++] = App.Data.SysCtrlPara.VentilateRate;   //11  7
+	TxValidDataBuffer[index++] = App.SysCtrlStatus.AirFlowSet;   //12  8
+	TxValidDataBuffer[index++] = App.SysCtrlStatus.ChildLock;   //13  9
+	TxValidDataBuffer[index++] = App.SysCtrlStatus.BypassMode;   //14  10
+	TxValidDataBuffer[index++] = App.SysCtrlStatus.ThermalMode;   //15  11
+	TxValidDataBuffer[index++] = App.Data.SensorData.TempInside+40;   //16  12
+	TxValidDataBuffer[index++] = App.Data.SensorData.RHInside;   //17  13
+	TxValidDataBuffer[index++] = App.Data.SensorData.TempOutside+40;   //18  14
+	TxValidDataBuffer[index++] = (App.Data.SensorData.CO2Inside>>8);   //19  15
+	TxValidDataBuffer[index++] = (App.Data.SensorData.CO2Inside&0xFF);   //20  16
+	TxValidDataBuffer[index++] = App.Data.SensorData.PMInside>>8;   //21  17
+	TxValidDataBuffer[index++] = App.Data.SensorData.PMInside&0xFF;   //22  18
 //	*pdes++ = App.SysFault.PowerBaseFault;   //23  19
 //	*pdes++ = App.SysFault.TempSensors;   //24  20
 //	*pdes++ = App.SysFault.RHSensor;   //25  21
@@ -80,7 +82,7 @@ static void AppSysParaUpload(void)
 //	*pdes = App.SysFault.MotoPF;   //29  25
    
 	 WifiTrans = 	SysParaUpload;
-   System.Device.Wifi.HekrValidDataUpload(19);	
+   System.Device.Wifi.HekrValidDataUpload(index);	
 //   System.Device.Wifi.HekrValidDataUpload(26);	
 }
 
@@ -98,16 +100,16 @@ static void AppWeekTimerSet(void)
 
 static void AppWeekTimerUpload(void)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 	byte* psrc;
 	byte i;
 
-	*pdes++ =WeekTimerUpload; //5
+	TxValidDataBuffer[index++] =WeekTimerUpload; //5
    psrc = (byte*)&(App.Data.WeekTimerMode);
    for(i=0;i<7;i++)   //6-12
-     *pdes++ = *psrc++;
+     TxValidDataBuffer[index++] = *psrc++;
    WifiTrans = 	WeekTimerUpload;
-   System.Device.Wifi.HekrValidDataUpload(8);	
+   System.Device.Wifi.HekrValidDataUpload(index);	
 }
 
 static void AppTimerModeSet(void)
@@ -148,38 +150,38 @@ static void AppTimerModeSet(void)
 
 static void AppTimerModeUpload(byte type)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 	byte* psrc;
 	byte i;
 	
-	*pdes++ =TimerModeUpload; //5
+	TxValidDataBuffer[index++] =TimerModeUpload; //5
 	switch(type)
 	{
 		case WORKDAYTYPE:
-			*pdes++ = WORKDAYTYPE; //6
+			TxValidDataBuffer[index++] = WORKDAYTYPE; //6
 			 psrc = (byte*)&(App.Data.DayTimerMode.WorkDayTimer);
 			break;
 		case WEEKENDTYPE:
-			*pdes++ = WEEKENDTYPE; //6
+			TxValidDataBuffer[index++] = WEEKENDTYPE; //6
 			 psrc = (byte*)&(App.Data.DayTimerMode.WeekendTimer);
 			break;
 		case HOLIDAYTYPE:
-			*pdes++ = HOLIDAYTYPE; //6
+			TxValidDataBuffer[index++] = HOLIDAYTYPE; //6
 			 psrc = (byte*)&(App.Data.DayTimerMode.HolidayTimer);
 			break;
 		case OFFICETYPE:
-			*pdes++ = OFFICETYPE; //6
+			TxValidDataBuffer[index++] = OFFICETYPE; //6
 			 psrc = (byte*)&(App.Data.DayTimerMode.OfficeTimer);
 			break;
 		case ENERGYTYPE:
-			*pdes++ = ENERGYTYPE; //6
+			TxValidDataBuffer[index++] = ENERGYTYPE; //6
 		 psrc = (byte*)&(App.Data.DayTimerMode.EnergyTimer);
 			break;
 	}
 	for(i=0;i<25;i++)   //7-31
-	   *pdes++ = *psrc++;
+	   TxValidDataBuffer[index++] = *psrc++;
   
-  System.Device.Wifi.HekrValidDataUpload(27);	
+  System.Device.Wifi.HekrValidDataUpload(index);	
 	WifiTrans = 	TimerModeUpload;
 }
 
@@ -228,24 +230,24 @@ static void AppEnvParaSet(void)
 
 static void AppEnvParaUpload(void)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 
-	*pdes++ =EnvParaUpload; //5  0
-	*pdes++ =App.Data.SysCtrlLine.TempInsideSummerLine; //6 1
-	*pdes++ = App.Data.SysCtrlLine.TempInsideWinterLine;   	//7  2
+	TxValidDataBuffer[index++] =EnvParaUpload; //5  0
+	TxValidDataBuffer[index++] =App.Data.SysCtrlLine.TempInsideSummerLine; //6 1
+	TxValidDataBuffer[index++] = App.Data.SysCtrlLine.TempInsideWinterLine;   	//7  2
 	switch(App.Data.SysCtrlLine.PMInsideLine)
 	{
 		case 100:
-			*pdes++ = 1;   //8  3
+			TxValidDataBuffer[index++] = 1;   //8  3
 			break;
 		case 150:
-			*pdes++ = 2;   //8
+			TxValidDataBuffer[index++] = 2;   //8
 			break;
 		case 200:
-			*pdes++ = 3;   //8
+			TxValidDataBuffer[index++] = 3;   //8
 			break;
 		case 250:
-			*pdes++ = 4;   //8
+			TxValidDataBuffer[index++] = 4;   //8
 			break;
 		default:
 			break;
@@ -253,19 +255,19 @@ static void AppEnvParaUpload(void)
 	switch(App.Data.SysCtrlLine.CO2InsideLine)
 	{
 		case 800:
-			*pdes = 1;   //9  4
+			TxValidDataBuffer[index++] = 1;   //9  4
 			break;
 		case 1000:
-			*pdes = 2;   //9
+			TxValidDataBuffer[index++] = 2;   //9
 			break;
 		case 1200:
-			*pdes = 3;   //9
+			TxValidDataBuffer[index++] = 3;   //9
 			break;
 		default:
 			break;
 	}
   
-  System.Device.Wifi.HekrValidDataUpload(5);	
+  System.Device.Wifi.HekrValidDataUpload(index);	
 	WifiTrans = 	EnvParaUpload;
 }
 
@@ -296,29 +298,29 @@ static void AppFilterSet(void)
 
 static void AppFilterUpload(void)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 	
-	*pdes++ =FilterUpload; //5
-	*pdes++ =App.Data.FilterHourLimit.FirstFilterHourLimit>>8; //6
-	*pdes++ =App.Data.FilterHourLimit.FirstFilterHourLimit&0xff; //7
-	*pdes++ = App.Data.FilterHourLimit.MidFilterHourLimit>>8;   	//8
-	*pdes++ = App.Data.FilterHourLimit.MidFilterHourLimit&0xff;   	//9
-	*pdes++ = App.Data.FilterHourLimit.ESPFilterHourLimit>>8;   //10
-	*pdes++ = App.Data.FilterHourLimit.ESPFilterHourLimit&0xff;   //11
-	*pdes++ = App.Data.FilterHourLimit.HPFilterHourLimit>>8;   //12
-	*pdes++ = App.Data.FilterHourLimit.HPFilterHourLimit&0xff;   //13
+	TxValidDataBuffer[index++] =FilterUpload; //5
+	TxValidDataBuffer[index++] =App.Data.FilterHourLimit.FirstFilterHourLimit>>8; //6
+	TxValidDataBuffer[index++] =App.Data.FilterHourLimit.FirstFilterHourLimit&0xff; //7
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.MidFilterHourLimit>>8;   	//8
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.MidFilterHourLimit&0xff;   	//9
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.ESPFilterHourLimit>>8;   //10
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.ESPFilterHourLimit&0xff;   //11
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.HPFilterHourLimit>>8;   //12
+	TxValidDataBuffer[index++] = App.Data.FilterHourLimit.HPFilterHourLimit&0xff;   //13
 	
-	*pdes++ = App.Data.FilterTimerHour.FirstFilterTimerHour>>8;   //14
-	*pdes++ = App.Data.FilterTimerHour.FirstFilterTimerHour&0xff;   //15
-	*pdes++ = App.Data.FilterTimerHour.MidFilterTimerHour>>8;   //16
-	*pdes++ = App.Data.FilterTimerHour.MidFilterTimerHour&0xff;   //17
-	*pdes++ = App.Data.FilterTimerHour.ESPFilterTimerHour>>8;   //18
-	*pdes++ = App.Data.FilterTimerHour.ESPFilterTimerHour&0xff;   //19
-	*pdes++ = App.Data.FilterTimerHour.HPFilterTimerHour>>8;   //20
-	*pdes++ = App.Data.FilterTimerHour.HPFilterTimerHour&0xff;   //21
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.FirstFilterTimerHour>>8;   //14
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.FirstFilterTimerHour&0xff;   //15
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.MidFilterTimerHour>>8;   //16
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.MidFilterTimerHour&0xff;   //17
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.ESPFilterTimerHour>>8;   //18
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.ESPFilterTimerHour&0xff;   //19
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.HPFilterTimerHour>>8;   //20
+	TxValidDataBuffer[index++] = App.Data.FilterTimerHour.HPFilterTimerHour&0xff;   //21
   
 	WifiTrans = 	FilterUpload;
-  System.Device.Wifi.HekrValidDataUpload(17);	
+  System.Device.Wifi.HekrValidDataUpload(index);	
 }
 
 static void AppDevTimeSet(void)
@@ -348,63 +350,56 @@ static void AppSYSFaultReport(void)
 {
 	uint val=0;
 	byte i=0;
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 
 	SysFaultBuffer = App.SysFault.FaultFlag;
-	*pdes++ =SYSFaultReport; //5
+	TxValidDataBuffer[index++] =SYSFaultReport; //5
 	
 	val=POWERBASE_FAULT;
 	for(i=0;i<7;i++)
 	{
 		if(SysFaultBuffer&val)
-			*pdes++ =1;
+			TxValidDataBuffer[index++] =1;
 		else
-			*pdes++ =0;
+			TxValidDataBuffer[index++] =0;
 		val <<=1;
 	}
 	val = FIRSTFILTER_CHECK;
 	for(i=0;i<4;i++)
 	{
 		if(SysFaultBuffer&val)
-			*pdes++ =1;
+			TxValidDataBuffer[index++] =1;
 		else
-			*pdes++ =0;
+			TxValidDataBuffer[index++] =0;
 		val <<=1;
 	}
 	val = CO2INSIDEBEYOND;
 	if(SysFaultBuffer&val)
-		*pdes++ =1;
+		TxValidDataBuffer[index++] =1;
 	else
-		*pdes++ =0;
+		TxValidDataBuffer[index++] =0;
 	val = PMINSIDEBEYONG;
 	if(SysFaultBuffer&val)
-		*pdes =1;
+		TxValidDataBuffer[index++] =1;
 	else
-		*pdes =0;
+		TxValidDataBuffer[index++] =0;
 	
 	WifiTrans = 	SYSFaultReport;
-  System.Device.Wifi.HekrValidDataUpload(14);	
+  System.Device.Wifi.HekrValidDataUpload(index);	
 }
 
 static void AppHistoryGraghDataReport(void)
 {
-	byte* pdes=TxValidDataBuffer;
+	byte index=0;
 
-	*pdes++ =HistoryGraghDataReport; //5
-	*pdes++ = (App.Data.SensorData.CO2Inside>>8);   //6
-	*pdes++ = (App.Data.SensorData.CO2Inside&0xFF);   //7
-	*pdes++ = App.Data.SensorData.PMInside>>8;   //8
-	*pdes++ = App.Data.SensorData.PMInside&0xFF;   //9
+	TxValidDataBuffer[index++] =HistoryGraghDataReport; //5
+	TxValidDataBuffer[index++] = (App.Data.SensorData.CO2Inside>>8);   //6
+	TxValidDataBuffer[index++] = (App.Data.SensorData.CO2Inside&0xFF);   //7
+	TxValidDataBuffer[index++] = App.Data.SensorData.PMInside>>8;   //8
+	TxValidDataBuffer[index++] = App.Data.SensorData.PMInside&0xFF;   //9
 
 	WifiTrans = 	HistoryGraghDataReport;
-  System.Device.Wifi.HekrValidDataUpload(5);	
-}
-
-void AppWifiInit(void)
-{
-	System.Device.Wifi.InitWifi(RxValidDataBuffer,TxValidDataBuffer,ModuleStatus);
-	WifiCtrlCode(ModuleQuery);
-//	System.Device.Wifi.HekrModuleControl(HekrConfig);
+  System.Device.Wifi.HekrValidDataUpload(index);	
 }
 
 void WifiRecvParse(byte type)
@@ -577,7 +572,7 @@ void WifiCtrlCode(byte code)
 	}
 }
 
-void WifiUpload(void)
+static void WifiUpload(void)
 {
 	byte i;
 	uint val=0x80000000;
@@ -661,4 +656,41 @@ void WifiUpload(void)
 	}
 }
 
+static void WifiSystick10(void)
+{
+	static byte second=0;
+	static ushort graphtimer=0;
+	
+	if(++second>9)   //per 1s
+	{
+		second=0;
+		if((App.WifiState&WIFI_STATE_STA)&&(App.WifiState&0x07E00000))
+				WifiUpload();
+	
+				
+	
+		graphtimer++;
+		if((graphtimer%30==0)&&(!(App.WifiState&WIFI_STATE_STA)))
+					WifiCtrlCode(ModuleQuery);
+		if(graphtimer>900)
+		{
+			graphtimer =1;
+				if(App.SysFault.FaultFlag)
+					App.WifiState |= WIFI_UPLOAD_FAULT;
+			
+			if(App.Data.SysCtrlPara.Power != POWER_OFF)
+				App.WifiState |= WIFI_UPLOAD_GRAPHDATA;
+
+		}
+	}
+	
+}
+
+void AppWifiInit(void)
+{
+	System.Device.Systick.Register(Systick10, WifiSystick10);
+	System.Device.Wifi.InitWifi(RxValidDataBuffer,TxValidDataBuffer,ModuleStatus);
+	WifiCtrlCode(ModuleQuery);
+//	System.Device.Wifi.HekrModuleControl(HekrConfig);
+}
 

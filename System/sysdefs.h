@@ -12,7 +12,7 @@
 
 
 #define MAIN_VERSION  2
-#define SUB_VERSION		30
+#define SUB_VERSION		31
 
 #define __WIFI_TEST
 #define __FAULT_DISP
@@ -34,7 +34,7 @@
 //#define HD_GJ_350B
 //#define HD_GJ_250A
 //#define HD_GJ_250B
-#define HD_GJ_350C
+//#define HD_GJ_350C
 //#define HD_GJ_250C
 //#define HD_GJ_250T
 //#define HD_GJ_150C
@@ -43,9 +43,10 @@
 //#define HD_GJ_500B
 //#define HD_GJ_350A
 //#define HD_GJ_500C
-//#define HD_GJ_500A
+#define HD_GJ_500A
 //#define HD_GJ_600Z
 //#define HD_GJ_360C
+//#define HD_BG_80
 
 
 typedef enum{

@@ -163,7 +163,6 @@ void ParseEchoData(byte data)
 					if(App.SysCtrlStatus.BypassMode != BYPASS_CIRCLEOUT)
 					{
 						App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEOUT;
-//						PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					}
 //					System.Device.Timer.Start(CO2_WARNING_TIMER,TimerMessage,CO2_WARNING_MS,SwitchCircleMode);
@@ -173,7 +172,6 @@ void ParseEchoData(byte data)
 					if(App.SysCtrlStatus.BypassMode != BYPASS_CIRCLEIN)
 					{
 						App.SysCtrlStatus.BypassMode = BYPASS_CIRCLEIN;
-//						PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					PostMessage(MessageParaUpdate, PARA_CIRCLEMODE);
 					}
 				}
@@ -350,8 +348,6 @@ void Function_Run(void)
 	seconds++;
 	
 	
-	if((App.WifiState&WIFI_STATE_STA)&&(App.WifiState&0x07E00000))
-			WifiUpload();
 		
 	switch(seconds) //10s
 	{
@@ -400,21 +396,6 @@ void Function_Run(void)
 			UseTimer10s++;
 #ifdef __TESTFILTER			
 			PostMessage(MessageProcess, FILTER_ONEHOUR);
-		  if(UseTimer10s%3==0)
-				App.WifiState |= WIFI_UPLOAD_GRAPHDATA;
-#else
-		  if(UseTimer10s%3==0)
-			{
-				if(!(App.WifiState&WIFI_STATE_STA))
-					WifiCtrlCode(ModuleQuery);
-			}
-			
-		  if(UseTimer10s%90==0)
-			{
-				App.WifiState |= WIFI_UPLOAD_GRAPHDATA;
-				if(App.SysFault.FaultFlag)
-					App.WifiState |= WIFI_UPLOAD_FAULT;
-			}
 #endif
 			if(UseTimer10s>360)
 			{
