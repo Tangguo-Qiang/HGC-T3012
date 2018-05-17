@@ -34,7 +34,6 @@ static byte StoreDelay=0;
 
 void SetVentiMoto2Act(void)
 {
-///	App.SysCtrlStatus.VentilateRate = App.Data.SysCtrlPara.VentilateRate ;
 	switch(App.Data.SysCtrlPara.VentilateRate )
 	{
 		case RATE10TO06:
@@ -341,10 +340,10 @@ void Function_Run(void)
 //	uint16_t temp=0;
 	static byte seconds=0;
 
-//#ifdef __DEBUG
-//			PostMessage(MessageCommTrans, COMM_XFMOTODUTY);
-//			PostMessage(MessageCommTrans, COMM_PFMOTODUTY);
-//#endif
+#ifdef __DEBUG
+			PostMessage(MessageCommTrans, COMM_XFMOTODUTY);
+			PostMessage(MessageCommTrans, COMM_PFMOTODUTY);
+#endif
 	seconds++;
 	
 	

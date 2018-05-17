@@ -616,12 +616,14 @@ static void WifiUpload(void)
 				WifiTrans = HistoryGraghDataReport;
 				break;
 			case 10:
-				if(SysFaultBuffer != App.SysFault.FaultFlag)
+#ifdef __FAULT_DISP
+			if(SysFaultBuffer != App.SysFault.FaultFlag)
 				{
 					AppSYSFaultReport();
 					WifiTrans = SYSFaultReport;
 				}
 				App.WifiState &= ~WIFI_UPLOAD_FAULT;
+#endif
 				break;
 			default :
 				break;
