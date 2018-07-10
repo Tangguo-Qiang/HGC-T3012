@@ -22,8 +22,8 @@
 #define ScanEnc1Pin01	PcIn(1)
 
 
-#define ShortInterval       4		// 短按按键间隔，不得低于3
-#define LongInterval        40		// 长按按键间隔
+#define ShortInterval       4		// 短按按键间隔，不得低于3  per10ms
+#define LongInterval        100 //40		// 长按按键间隔
 #define InvalidInterval     4       // 无效识别长度
 #define DoubleHitInterval   50		// 防连续双击误动间隔
 #define KeyBeepInterval     20      // 按键音长度

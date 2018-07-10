@@ -12,7 +12,7 @@
 
 
 #define MAIN_VERSION  2
-#define SUB_VERSION		31
+#define SUB_VERSION		32
 
 #define __WIFI_TEST
 #define __FAULT_DISP
@@ -22,9 +22,9 @@
 //#define __LANGJIE_CTRL
 //#define __MAILINSEN_CTRL
 
-#define __ONLINE_DEBUG
+//#define __ONLINE_DEBUG
 //#define __RPMCTRL_OFF
-#define __DEBUG
+//#define __DEBUG
 
 #ifdef __ONLINE_DEBUG
   #define __DEBUG
@@ -32,14 +32,14 @@
 
 
 //#define HD_GJ_350B
-//#define HD_GJ_250A
+#define HD_GJ_250A
 //#define HD_GJ_250B
 //#define HD_GJ_350C
 //#define HD_GJ_250C
 //#define HD_GJ_250T
 //#define HD_GJ_150C
 //#define HD_GJ_350TEST
-#define HD_GJ_800C
+//#define HD_GJ_800C
 //#define HD_GJ_500B
 //#define HD_GJ_350A
 //#define HD_GJ_500C
