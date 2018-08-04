@@ -330,6 +330,8 @@ void RTC_CheckAndConfig(void)
 			
 			/*等待上次RTC寄存器写操作完成*/
 			RTC_WaitForLastTask();
+		/*等待寄存器同步*/
+		RTC_WaitForSynchro();
 		}
 		else
 		{

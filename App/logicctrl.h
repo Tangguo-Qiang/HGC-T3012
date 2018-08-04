@@ -177,19 +177,36 @@
 	
 //	#define RPM_MOTO1_TOP							(uint16_t)1100
 //	#define RPM_MOTO2_TOP							(uint16_t)900
+///* For 55moto */	
+//	#define RPM_MOTO1_OUT_MAX							(uint16_t)1150		//1130
+//	#define RPM_MOTO1_IN_MAX							(uint16_t)790		//1130
+//	#define RPM_MOTO1_MIN							(uint16_t)450
+//	#define RPM_MOTO1_OUT_ACT							(RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)
+//	#define RPM_MOTO1_IN_ACT							(RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)
+//	#define RPM_MOTO1_OUT_STEP						(uint16_t)((RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
+//	#define RPM_MOTO1_IN_STEP						(uint16_t)((RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 	
-	#define RPM_MOTO1_OUT_MAX							(uint16_t)1150		//1130
-	#define RPM_MOTO1_IN_MAX							(uint16_t)790		//1130
+/* For 49moto */	
+	#define RPM_MOTO1_OUT_MAX							(uint16_t)1350		//1130
+	#define RPM_MOTO1_IN_MAX							(uint16_t)900		//1130
 	#define RPM_MOTO1_MIN							(uint16_t)450
 	#define RPM_MOTO1_OUT_ACT							(RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)
 	#define RPM_MOTO1_IN_ACT							(RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)
 	#define RPM_MOTO1_OUT_STEP						(uint16_t)((RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 	#define RPM_MOTO1_IN_STEP						(uint16_t)((RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 	
-	#define RPM_MOTO2_MAX12							(uint16_t)900		//1350
-	#define RPM_MOTO2_MAX10							(uint16_t)740		//1350
-	#define RPM_MOTO2_MAX08							(uint16_t)620		//1350
-	#define RPM_MOTO2_MAX06							(uint16_t)520		//1350
+///* For 55moto */	
+//	#define RPM_MOTO2_MAX12							(uint16_t)900		//1350
+//	#define RPM_MOTO2_MAX10							(uint16_t)740		//1350
+//	#define RPM_MOTO2_MAX08							(uint16_t)620		//1350
+//	#define RPM_MOTO2_MAX06							(uint16_t)520		//1350
+//	#define RPM_MOTO2_MIN								(uint16_t)400
+//	#define RPM_MOTO2_STOP							(uint16_t)350
+/* For 49moto */	
+	#define RPM_MOTO2_MAX12							(uint16_t)1100		//1350
+	#define RPM_MOTO2_MAX10							(uint16_t)1000		//1350
+	#define RPM_MOTO2_MAX08							(uint16_t)900		//1350
+	#define RPM_MOTO2_MAX06							(uint16_t)800		//1350
 	#define RPM_MOTO2_MIN								(uint16_t)400
 	#define RPM_MOTO2_STOP							(uint16_t)350
 
@@ -796,12 +813,20 @@
 	#define RPM_MOTO1_OUT_STEP						(uint16_t)((RPM_MOTO1_OUT_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 	#define RPM_MOTO1_IN_STEP						(uint16_t)((RPM_MOTO1_IN_MAX-RPM_MOTO1_MIN)/AIRFLOW_TOTAL_STEPS)
 
-	#define RPM_MOTO2_MAX12							(uint16_t)950		//1350
+/* for 55moto  */
+  #define RPM_MOTO2_MAX12							(uint16_t)950		//1350
 	#define RPM_MOTO2_MAX10							(uint16_t)840		//1350
 	#define RPM_MOTO2_MAX08							(uint16_t)740		//1350
 	#define RPM_MOTO2_MAX06							(uint16_t)640		//1350
 	#define RPM_MOTO2_MIN							(uint16_t)450
 	#define RPM_MOTO2_STOP							(uint16_t)350
+/* for 49moto  */
+//  #define RPM_MOTO2_MAX12							(uint16_t)1150		//1350
+//	#define RPM_MOTO2_MAX10							(uint16_t)1050		//1350
+//	#define RPM_MOTO2_MAX08							(uint16_t)950		//1350
+//	#define RPM_MOTO2_MAX06							(uint16_t)850		//1350
+//	#define RPM_MOTO2_MIN							(uint16_t)450
+//	#define RPM_MOTO2_STOP							(uint16_t)350
 	
 	#define RPM_MOTO1_TOP							(uint16_t)(RPM_MOTO1_OUT_MAX+50)
 	#define RPM_MOTO2_TOP							(uint16_t)(RPM_MOTO2_MAX12+50)
